@@ -5,6 +5,7 @@ from PyQt5.QtCore import Qt, QEvent, QObject, QPoint, pyqtSignal
 from Ui_board import Ui_Form
 import sys
 import json
+from time import sleep
 
 
 class Board(QWidget):
@@ -15,7 +16,7 @@ class Board(QWidget):
     # paintState状态
     START, GAME, FIRST = 'START', 'GAME', 'FIRST'
     # 发送给算法端
-    sendmapSignal = pyqtSignal(str)
+    sendmapSignal = pyqtSignal(dict)
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -32,10 +33,13 @@ class Board(QWidget):
         self.pix.fill(QColor(255, 255, 191))
         self.ui.rbt_black.toggled.connect(lambda: self.choose_piece(self.BLACK))
         self.ui.rbt_white.toggled.connect(lambda: self.choose_piece(self.WHITE))
+        self.ui.pbt_swap.clicked.connect(self.thrid_swap)
         self.ui.pbt_start.clicked.connect(self.start_game)
         self.map = [[self.EMPTY] * 15 for _ in range(15)]
         self.isRunning = False
         self.tag = ''
+        # 步骤列表，所有点放在这里面
+        self.steps = []
 
     def transfer_json(self):
         return json.dumps({'map': self.map, 'me': self.piece})
@@ -95,7 +99,9 @@ class Board(QWidget):
                 self.first_game()
                 self.paintState = self.GAME
             elif self.paintState == self.GAME:
-                self.draw_piece(self.piecePos, self.piece)
+                while len(self.steps) != 0:
+                    pos = self.steps.pop()
+                    self.draw_piece(pos['step'], pos['me'])
             painter = QPainter(self.ui.map)
             painter.drawPixmap(0, 0, self.pix)
         return QObject.eventFilter(self, obj, event)
@@ -125,8 +131,12 @@ class Board(QWidget):
                 if self.map[y][x] == self.EMPTY:
                     self.map[y][x] = self.piece
                     self.piecePos = [x, y]
-                    self.sendmapSignal.emit(self.transfer_json())
+                    self.steps.append({'step': self.piecePos, 'me': -self.piece})
                     self.update()
+                    self.sendmapSignal.emit({
+                        'map': self.map,
+                        'me': self.piece
+                    })
 
     def choose_piece(self, piece):
         self.piece = piece
@@ -136,6 +146,17 @@ class Board(QWidget):
         if self.isfirst is True:
             self.paintState = self.FIRST
             self.update()
+
+    def get_result(self, res: dict):
+        self.steps.append(res)
+        self.update()
+
+    def thrid_swap(self):
+        self.piece = -self.piece
+        if self.ui.rbt_white.isChecked():
+            self.ui.rbt_black.setChecked(True)
+        else:
+            self.ui.rbt_white.setChecked(True)
 
 
 if __name__ == '__main__':
