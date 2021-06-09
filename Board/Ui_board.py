@@ -17,6 +17,9 @@ class Ui_Form(object):
         Form.resize(1200, 950)
         Form.setMinimumSize(QtCore.QSize(1200, 950))
         Form.setMaximumSize(QtCore.QSize(1200, 950))
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/main/map.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        Form.setWindowIcon(icon)
         self.horizontalLayout = QtWidgets.QHBoxLayout(Form)
         self.horizontalLayout.setContentsMargins(0, 0, 2, 2)
         self.horizontalLayout.setSpacing(10)
@@ -125,6 +128,26 @@ class Ui_Form(object):
         font.setBold(True)
         font.setWeight(75)
         self.pbt_start.setFont(font)
+        self.pbt_start.setStyleSheet("QPushButton {\n"
+"    border-style:none;\n"
+"    padding:10px;\n"
+"    border-radius:15px;\n"
+"    color:#FFFFFF;\n"
+"    background:#34495E;\n"
+"}\n"
+"QPushButton:hover {\n"
+"    color:#4E6D8C;\n"
+"    background:#e5e5e5;\n"
+"    border:2px solid #34495E;\n"
+"}\n"
+"QPushButton:pressed {\n"
+"    color:#000000;\n"
+"    background:#B8C6D1;\n"
+"}\n"
+"QPushButton:disabled {\n"
+"    background: rgb(119, 118, 127);\n"
+"}\n"
+"")
         self.pbt_start.setObjectName("pbt_start")
         self.horizontalLayout_4.addWidget(self.pbt_start)
         self.verticalLayout_2.addLayout(self.horizontalLayout_4)
@@ -142,9 +165,66 @@ class Ui_Form(object):
         font.setBold(True)
         font.setWeight(75)
         self.pbt_swap.setFont(font)
+        self.pbt_swap.setStyleSheet("QPushButton {\n"
+"    border-style:none;\n"
+"    padding:10px;\n"
+"    border-radius:15px;\n"
+"    color:#FFFFFF;\n"
+"    background:#34495E;\n"
+"}\n"
+"QPushButton:hover {\n"
+"    color:#4E6D8C;\n"
+"    background:#e5e5e5;\n"
+"    border:2px solid #34495E;\n"
+"}\n"
+"QPushButton:pressed {\n"
+"    color:#000000;\n"
+"    background:#B8C6D1;\n"
+"}\n"
+"QPushButton:disabled {\n"
+"    background: rgb(119, 118, 127);\n"
+"}\n"
+"")
         self.pbt_swap.setObjectName("pbt_swap")
         self.horizontalLayout_3.addWidget(self.pbt_swap)
         self.verticalLayout_2.addLayout(self.horizontalLayout_3)
+        self.horizontalLayout_6 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_6.setObjectName("horizontalLayout_6")
+        self.pbt_save = QtWidgets.QPushButton(self.widget_2)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.pbt_save.sizePolicy().hasHeightForWidth())
+        self.pbt_save.setSizePolicy(sizePolicy)
+        font = QtGui.QFont()
+        font.setFamily("Microsoft YaHei UI")
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setWeight(75)
+        self.pbt_save.setFont(font)
+        self.pbt_save.setStyleSheet("QPushButton {\n"
+"    border-style:none;\n"
+"    padding:10px;\n"
+"    border-radius:15px;\n"
+"    color:#FFFFFF;\n"
+"    background:#34495E;\n"
+"}\n"
+"QPushButton:hover {\n"
+"    color:#4E6D8C;\n"
+"    background:#e5e5e5;\n"
+"    border:2px solid #34495E;\n"
+"}\n"
+"QPushButton:pressed {\n"
+"    color:#000000;\n"
+"    background:#B8C6D1;\n"
+"}\n"
+"QPushButton:disabled {\n"
+"    background: rgb(119, 118, 127);\n"
+"}\n"
+"")
+        self.pbt_save.setObjectName("pbt_save")
+        self.horizontalLayout_6.addWidget(self.pbt_save)
+        self.verticalLayout_2.addLayout(self.horizontalLayout_6)
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.verticalLayout_2.addItem(spacerItem)
         self.verticalLayout_3 = QtWidgets.QVBoxLayout()
@@ -176,3 +256,5 @@ class Ui_Form(object):
         self.checkBox.setText(_translate("Form", "先手"))
         self.pbt_start.setText(_translate("Form", "开始游戏"))
         self.pbt_swap.setText(_translate("Form", "三手交换"))
+        self.pbt_save.setText(_translate("Form", "保存棋盘"))
+from img import icon_rc

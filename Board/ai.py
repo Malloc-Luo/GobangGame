@@ -18,7 +18,8 @@ class AI(QObject):
     next_point = [0, 0]  # AI下一步最应该下的位置
     COLUMN = 14
     ROW = 14
-    
+    blank_list = []
+
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
         self.map = None
@@ -31,10 +32,11 @@ class AI(QObject):
         cut_count = 0
         global search_count   # 统计搜索次数
         search_count = 0
-       # AI.negamax(self,True, self.DEPTH, -99999999, 99999999)
+        AI.negamax(self,True, self.DEPTH, -99999999, 99999999)
         print("本次共剪枝次数：" + str(cut_count))
         print("本次共搜索次数：" + str(search_count))
-        return AI.next_point[0], AI.next_point[1]
+        print("下一个点： ",AI.next_point)
+        #return AI.next_point[0], AI.next_point[1]
 
     
     # 负值极大算法搜索 alpha + beta剪枝
@@ -46,16 +48,17 @@ class AI(QObject):
         if AI.game_win(self,AI.list_my) or AI.game_win(self,AI.list_enemy) or depth == 0:
             return AI.evaluation(self,is_ai)
 
-        blank_list = list(set(chess_board).difference(set(AI.list_all)))
-        AI.order(self,blank_list)   # 搜索顺序排序  提高剪枝效率
+        #blank_list = list(set(AI.chess_board).difference(set(AI.list_all)))
+
+        AI.order(self)   # 搜索顺序排序  提高剪枝效率
         # 遍历每一个候选步
-        for next_step in blank_list:
+        for next_step in AI.blank_list:
 
             global search_count
             search_count += 1
 
             # 如果要评估的位置没有相邻的子， 则不去评估  减少计算
-            if not AI.has_neightnor(self,next_step,AI.list_all):
+            if not AI.has_neightnor(self,next_step):
                 continue
 
             if is_ai:
@@ -64,7 +67,7 @@ class AI(QObject):
                 AI.list_enemy.append(next_step)
             AI.list_all.append(next_step)
 
-            value = -AI.negamax(not is_ai, depth - 1, -beta, -alpha)
+            value = -AI.negamax(self,not is_ai, depth - 1, -beta, -alpha)
             if is_ai:
                 AI.list_my.remove(next_step)
             else:
@@ -89,16 +92,17 @@ class AI(QObject):
 
     
     #  离最后落子的邻居位置最有可能是最优点
-    def order(self,blank_list):
+    def order(self):
         last_pt = AI.list_all[-1]#倒着数，最后一个点
-        for item in blank_list:
+        for item in AI.blank_list:
             for i in range(-1, 2):
                 for j in range(-1, 2):
                     if i == 0 and j == 0:
                         continue
-                    if (last_pt[0] + i, last_pt[1] + j) in blank_list:
-                        blank_list.remove((last_pt[0] + i, last_pt[1] + j))
-                        blank_list.insert(0, (last_pt[0] + i, last_pt[1] + j))
+                    test_pt = [last_pt[0] + i, last_pt[1] + j]
+                    if (test_pt) in AI.blank_list:
+                        AI.blank_list.remove((test_pt))
+                        AI.blank_list.insert(0, (test_pt))
 
     #邻居中存在已经下了的棋子中，返回true
     def has_neightnor(self,pt):
@@ -106,7 +110,8 @@ class AI(QObject):
             for j in range(-1, 2):
                 if i == 0 and j == 0:
                     continue
-                if (pt[0] + i, pt[1]+j) in AI.list_all:
+                test_pt = [pt[0] + i, pt[1]+j]
+                if (test_pt) in AI.list_all:
                     return True
         return False
 
@@ -242,6 +247,38 @@ class AI(QObject):
         return False
 
 
+          
+            
+    def ifWin(myChessMap):
+
+        for i in range(0,15):
+            myChessMap[i].extend([5, 5, 5, 5, 5])
+            myChessMap[i] = [5, 5, 5, 5, 5] + myChessMap[i]
+        for i in range(0,5):
+            a = [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+            myChessMap.append([5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5])
+            myChessMap.insert(0,[5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5])
+            
+        for i in range(5,20):
+            for j in range(5,20):
+                if(myChessMap[j][i] != 0):
+                    if(myChessMap[j][i] == myChessMap[j][i + 1] and myChessMap[j][i] == myChessMap[j][i + 2] and myChessMap[j][i] == myChessMap[j][i + 3] and myChessMap[j][i] == myChessMap[j][i + 4]):
+                        return myChessMap[j][i]
+                    elif(myChessMap[j + 1][i] == myChessMap[j][i] and myChessMap[j][i] == myChessMap[j + 2][i] and myChessMap[j][i] == myChessMap[j + 3][i] and myChessMap[j + 4][i] == myChessMap[j][i]):
+                        return myChessMap[j][i]
+                    elif(myChessMap[j + 1][i + 1] == myChessMap[j][i] and myChessMap[j][i] == myChessMap[j + 2][i + 2] and myChessMap[j][i] == myChessMap[j + 3][i + 3] and myChessMap[j + 4][i + 4] == myChessMap[j][i]):
+                        return myChessMap[j][i]
+                    elif(myChessMap[j + 1][i - 1] == myChessMap[j][i] and myChessMap[j][i] == myChessMap[j + 2][i - 2] and myChessMap[j][i] == myChessMap[j + 3][i - 3] and myChessMap[j + 4][i - 4] == myChessMap[j][i]):
+                        return myChessMap[j][i]                     
+        return 0
+
+    def reverse_list (self,list):
+        newlist = []
+        for element in list:
+            test_pt = [element[1],element[0]]
+            newlist.append(test_pt)
+        return newlist
+
     def get_map(self, info: dict):
         # 这个是棋盘，在这里面进行计算
         self.map = np.array(info['map'])
@@ -254,12 +291,32 @@ class AI(QObject):
             for j in range(AI.ROW+1):
                 AI.chess_board.append((i, j))
 
+        maplist = self.map.tolist()
+        '''
+        AI.list_my = np.argwhere(self.map == 1).tolist()# == self.me
+        AI.list_enemy = np.argwhere(self.map == -1).tolist()
+        AI.list_all = AI.list_my+AI.list_enemy
+        AI.blank_list = np.argwhere(self.map == 0).tolist()
         
-        list_my = np.argwhere(self.map == 1).tolist()# == self.me
-        list_enemy = np.argwhere(self.map == -1).tolist()
-        list_all = list_my+list_enemy
-        AI.ai(self)
 
+        '''
+        AI.list_my = AI.reverse_list (self,np.argwhere(self.map == 1).tolist())# == self.me
+        AI.list_enemy = AI.reverse_list (self,np.argwhere(self.map == -1).tolist())
+        AI.list_all = AI.list_my+AI.list_enemy
+        AI.blank_list = AI.reverse_list (self,np.argwhere(self.map == 0).tolist())
+        
+
+        '''
+        AI.list_my = np.swapaxes(np.argwhere(self.map == 1),0,1).tolist()
+        AI.list_enemy = np.swapaxes(np.argwhere(self.map == -1),0,1).tolist()
+        AI.list_all = AI.list_my+AI.list_enemy
+        AI.blank_list = np.swapaxes(np.argwhere(self.map == 0),0,1).tolist()
+        '''
+
+        AI.ai(self)
+        AI.ret_result(self,AI.next_point)
+        AI.ifWin(maplist)
+        
         ##############################
 
     def ret_result(self, pos: tuple):

@@ -5,7 +5,7 @@ from PyQt5.QtCore import Qt, QEvent, QObject, QPoint, pyqtSignal
 from Ui_board import Ui_Form
 import sys
 import json
-from time import sleep
+from time import sleep, time
 
 
 class Board(QWidget):
@@ -35,6 +35,7 @@ class Board(QWidget):
         self.ui.rbt_white.toggled.connect(lambda: self.choose_piece(self.WHITE))
         self.ui.pbt_swap.clicked.connect(self.thrid_swap)
         self.ui.pbt_start.clicked.connect(self.start_game)
+        self.ui.pbt_save.clicked.connect(self.save_map)
         self.map = [[self.EMPTY] * 15 for _ in range(15)]
         self.isRunning = False
         self.tag = ''
@@ -109,8 +110,8 @@ class Board(QWidget):
     def first_game(self):
         '''先手下'''
         self.draw_piece((7, 7), self.BLACK)
-        self.draw_piece((7, 8), self.WHITE)
-        self.draw_piece((8, 7), self.BLACK)
+        #self.draw_piece((7, 8), self.WHITE)
+        #self.draw_piece((8, 7), self.BLACK)
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
@@ -129,7 +130,7 @@ class Board(QWidget):
                 else:
                     return None
                 if self.map[y][x] == self.EMPTY:
-                    self.map[y][x] = self.piece
+                    self.map[y][x] = -self.piece
                     self.piecePos = [x, y]
                     self.steps.append({'step': self.piecePos, 'me': -self.piece})
                     self.update()
@@ -157,6 +158,13 @@ class Board(QWidget):
             self.ui.rbt_black.setChecked(True)
         else:
             self.ui.rbt_white.setChecked(True)
+
+    def save_map(self):
+        with open(str(int(time())) + '.json', 'w', encoding='utf-8') as f:
+            json.dump({
+                'map': self.map,
+                'me': self.piece
+            }, f, indent=4)
 
 
 if __name__ == '__main__':

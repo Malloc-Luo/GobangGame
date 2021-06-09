@@ -44,6 +44,7 @@ def ai():
     negamax(True, DEPTH, -99999999, 99999999)
     print("本次共剪枝次数：" + str(cut_count))
     print("本次共搜索次数：" + str(search_count))
+    print("下一个点： ",next_point)
     return next_point[0], next_point[1]
 
 
