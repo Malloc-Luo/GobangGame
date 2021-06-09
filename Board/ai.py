@@ -20,6 +20,22 @@ class AI(QObject):
     ROW = 14
     blank_list = []
 
+    shape_score = [(50, [0, 1, 1, 0, 0]),
+               (50, [0, 0, 1, 1, 0]),
+               (200, [1, 1, 0, 1, 0]),
+               (500, [0, 0, 1, 1, 1]),
+               (500, [1, 1, 1, 0, 0]),
+               (5000, [0, 1, 1, 1, 0]),
+               (5000, [0, 1, 0, 1, 1, 0]),
+               (5000, [0, 1, 1, 0, 1, 0]),
+               (5000, [1, 1, 1, 0, 1]),
+               (5000, [1, 1, 0, 1, 1]),
+               (5000, [1, 0, 1, 1, 1]),
+               (5000, [1, 1, 1, 1, 0]),
+               (5000, [0, 1, 1, 1, 1]),
+               (50000, [0, 1, 1, 1, 1, 0]),
+               (99999999, [1, 1, 1, 1, 1])]
+
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
         self.map = None
@@ -158,23 +174,7 @@ class AI(QObject):
     # 每个方向上的分值计算
     def cal_score(self,m, n, x_decrict, y_derice, enemy_list, my_list, score_all_arr):
 
-        # 棋型的评估分数
-        shape_score = [(50, (0, 1, 1, 0, 0)),
-                    (50, (0, 0, 1, 1, 0)),
-                    (200, (1, 1, 0, 1, 0)),
-                    (500, (0, 0, 1, 1, 1)),
-                    (500, (1, 1, 1, 0, 0)),
-                    (5000, (0, 1, 1, 1, 0)),
-                    (5000, (0, 1, 0, 1, 1, 0)),
-                    (5000, (0, 1, 1, 0, 1, 0)),
-                    (5000, (1, 1, 1, 0, 1)),
-                    (5000, (1, 1, 0, 1, 1)),
-                    (5000, (1, 0, 1, 1, 1)),
-                    (5000, (1, 1, 1, 1, 0)),
-                    (5000, (0, 1, 1, 1, 1)),
-                    (50000, (0, 1, 1, 1, 1, 0)),
-                    (99999999, (1, 1, 1, 1, 1))]
-
+        
         add_score = 0  # 加分项
         # 在一个方向上， 只取最大的得分项
         max_score_shape = (0, None)
@@ -199,7 +199,7 @@ class AI(QObject):
             tmp_shap5 = (pos[0], pos[1], pos[2], pos[3], pos[4])
             tmp_shap6 = (pos[0], pos[1], pos[2], pos[3], pos[4], pos[5])
 
-            for (score, shape) in shape_score:
+            for (score, shape) in AI.shape_score:
                 if tmp_shap5 == shape or tmp_shap6 == shape:
                     if tmp_shap5 == (1,1,1,1,1):
                         print('wwwwwwwwwwwwwwwwwwwwwwwwwww')
@@ -246,10 +246,16 @@ class AI(QObject):
                     return True
         return False
 
+    def reverse_list (self,list):
+        newlist = []
+        for element in list:
+            test_pt = [element[1],element[0]]
+            newlist.append(test_pt)
+        return newlist
 
           
             
-    def ifWin(myChessMap):
+    def ifWin(self,myChessMap):
 
         for i in range(0,15):
             myChessMap[i].extend([5, 5, 5, 5, 5])
@@ -272,12 +278,55 @@ class AI(QObject):
                         return myChessMap[j][i]                     
         return 0
 
-    def reverse_list (self,list):
-        newlist = []
-        for element in list:
-            test_pt = [element[1],element[0]]
-            newlist.append(test_pt)
-        return newlist
+
+    def SearchPoint(self,myChessMap):
+        #tempMap = myChessMap
+        markList=[]
+        search_count = 0
+        #AI.order(self)
+        for next_step in AI.blank_list:
+
+            search_count += 1
+            myChessMap[next_step] = 1
+            maplist = myChessMap.tolist()
+            mark = AI.evaluae(self,maplist,1)
+            markList.append(mark)
+
+
+            
+    def evaluae(self,myChessMap,color):
+        if(color == -1):
+            for i in range(0,15):
+                for j in range(0,15):
+                    myChessMap[i][j] = -myChessMap[i][j]
+        chessBuffer = []
+        mark = 0
+
+        for i in range(0,15):
+            myChessMap[i].extend([5, 5, 5, 5, 5])
+            myChessMap[i] = [5, 5, 5, 5, 5] + myChessMap[i]
+        for i in range(0,5):
+            a = [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+            myChessMap.append([5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5])
+            myChessMap.insert(0,[5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5])
+
+
+        
+        for i in range(5,20):
+            for j in range(5,20):
+                chessBuffer.append([myChessMap[i][j + 0], myChessMap[i][j + 1], myChessMap[i][j + 2], myChessMap[i][j + 3], myChessMap[i][j + 4]])
+                chessBuffer.append([myChessMap[i + 0][j], myChessMap[i + 1][j], myChessMap[i + 2][j], myChessMap[i + 3][j], myChessMap[i + 4][j]])
+                chessBuffer.append([myChessMap[i + 0][j + 0], myChessMap[i + 1][j + 1], myChessMap[i + 2][j + 2], myChessMap[i + 3][j + 3], myChessMap[i + 4][j + 4]])
+                chessBuffer.append([myChessMap[i - 0][j + 0], myChessMap[i - 1][j + 1], myChessMap[i - 2][j + 2], myChessMap[i - 3][j + 3], myChessMap[i - 4][j + 4]])
+                for k in range(0,len(chessBuffer)):
+                    for m in range(0,len(AI.shape_score)):
+                        if(chessBuffer[k] == AI.shape_score[m][1]):
+                            mark = mark + AI.shape_score[m][0]
+                chessBuffer.clear()
+        print("mark is " , mark)
+        return mark
+    
+
 
     def get_map(self, info: dict):
         # 这个是棋盘，在这里面进行计算
@@ -291,20 +340,25 @@ class AI(QObject):
             for j in range(AI.ROW+1):
                 AI.chess_board.append((i, j))
 
-        maplist = self.map.tolist()
+        map = self.map
+        AI.list_my = np.argwhere(self.map == 1)# == self.me
+        AI.list_enemy = np.argwhere(self.map == -1)
+        AI.list_all = AI.list_my+AI.list_enemy
+        AI.blank_list = np.argwhere(self.map == 0)
+
         '''
         AI.list_my = np.argwhere(self.map == 1).tolist()# == self.me
         AI.list_enemy = np.argwhere(self.map == -1).tolist()
         AI.list_all = AI.list_my+AI.list_enemy
         AI.blank_list = np.argwhere(self.map == 0).tolist()
-        
+        '''
 
         '''
         AI.list_my = AI.reverse_list (self,np.argwhere(self.map == 1).tolist())# == self.me
         AI.list_enemy = AI.reverse_list (self,np.argwhere(self.map == -1).tolist())
         AI.list_all = AI.list_my+AI.list_enemy
         AI.blank_list = AI.reverse_list (self,np.argwhere(self.map == 0).tolist())
-        
+        '''
 
         '''
         AI.list_my = np.swapaxes(np.argwhere(self.map == 1),0,1).tolist()
@@ -313,10 +367,29 @@ class AI(QObject):
         AI.blank_list = np.swapaxes(np.argwhere(self.map == 0),0,1).tolist()
         '''
 
-        AI.ai(self)
-        AI.ret_result(self,AI.next_point)
-        AI.ifWin(maplist)
-        
+        chessMap = [
+            [0, 0, 0, 0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            ]
+
+       # AI.ai(self)
+        #AI.ret_result(self,AI.next_point)
+        mark = AI.SearchPoint(self,map)
+        AI.ifWin(self,map.tolist())
+        print("mark is " , mark)
         ##############################
 
     def ret_result(self, pos: tuple):
