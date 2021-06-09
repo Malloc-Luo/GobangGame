@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'd:\FileBox\Game\board.ui'
+# Form implementation generated from reading ui file 'd:\FileBox\Gobang\GobangGame\Board\board.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.2
 #
@@ -28,6 +28,7 @@ class Ui_Form(object):
         sizePolicy.setHeightForWidth(self.map.sizePolicy().hasHeightForWidth())
         self.map.setSizePolicy(sizePolicy)
         self.map.setMinimumSize(QtCore.QSize(960, 960))
+        self.map.setCursor(QtGui.QCursor(QtCore.Qt.CrossCursor))
         self.map.setStyleSheet("QWidget {\n"
 "    background: rgb(255, 255, 191);\n"
 "}")
@@ -47,10 +48,24 @@ class Ui_Form(object):
         self.verticalLayout_2.setContentsMargins(2, 30, 2, -1)
         self.verticalLayout_2.setSpacing(25)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.label = QtWidgets.QLabel(self.widget_2)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
+        self.label.setSizePolicy(sizePolicy)
+        font = QtGui.QFont()
+        font.setFamily("Microsoft YaHei UI")
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label.setFont(font)
+        self.label.setObjectName("label")
+        self.verticalLayout_2.addWidget(self.label)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.rbt_black = QtWidgets.QRadioButton(self.widget_2)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.rbt_black.sizePolicy().hasHeightForWidth())
@@ -65,7 +80,7 @@ class Ui_Form(object):
         self.rbt_black.setObjectName("rbt_black")
         self.horizontalLayout_2.addWidget(self.rbt_black)
         self.rbt_white = QtWidgets.QRadioButton(self.widget_2)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.rbt_white.sizePolicy().hasHeightForWidth())
@@ -113,6 +128,23 @@ class Ui_Form(object):
         self.pbt_start.setObjectName("pbt_start")
         self.horizontalLayout_4.addWidget(self.pbt_start)
         self.verticalLayout_2.addLayout(self.horizontalLayout_4)
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.pbt_swap = QtWidgets.QPushButton(self.widget_2)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.pbt_swap.sizePolicy().hasHeightForWidth())
+        self.pbt_swap.setSizePolicy(sizePolicy)
+        font = QtGui.QFont()
+        font.setFamily("Microsoft YaHei UI")
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setWeight(75)
+        self.pbt_swap.setFont(font)
+        self.pbt_swap.setObjectName("pbt_swap")
+        self.horizontalLayout_3.addWidget(self.pbt_swap)
+        self.verticalLayout_2.addLayout(self.horizontalLayout_3)
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.verticalLayout_2.addItem(spacerItem)
         self.verticalLayout_3 = QtWidgets.QVBoxLayout()
@@ -138,7 +170,9 @@ class Ui_Form(object):
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
+        self.label.setText(_translate("Form", "本机AI 棋子:"))
         self.rbt_black.setText(_translate("Form", "黑棋"))
         self.rbt_white.setText(_translate("Form", "白棋"))
         self.checkBox.setText(_translate("Form", "先手"))
         self.pbt_start.setText(_translate("Form", "开始游戏"))
+        self.pbt_swap.setText(_translate("Form", "三手交换"))

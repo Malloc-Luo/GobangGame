@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
-
-from PyQt5 import QtCore
 from PyQt5.QtWidgets import QWidget, QApplication
 from PyQt5.QtGui import QPainter, QPen, QColor, QBrush, QPixmap, QFont
 from PyQt5.QtCore import Qt, QEvent, QObject, QPoint, pyqtSignal
 from Ui_board import Ui_Form
-from pprint import pprint
 import sys
 import json
+from time import sleep
 
 
 class Board(QWidget):
@@ -16,9 +14,9 @@ class Board(QWidget):
     # 棋子编号
     BLACK, WHITE, EMPTY = 1, -1, 0
     # paintState状态
-    START, GAME = 'START', 'GAME'
+    START, GAME, FIRST = 'START', 'GAME', 'FIRST'
     # 发送给算法端
-    sendmapSignal = pyqtSignal(str)
+    sendmapSignal = pyqtSignal(dict)
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -35,10 +33,13 @@ class Board(QWidget):
         self.pix.fill(QColor(255, 255, 191))
         self.ui.rbt_black.toggled.connect(lambda: self.choose_piece(self.BLACK))
         self.ui.rbt_white.toggled.connect(lambda: self.choose_piece(self.WHITE))
+        self.ui.pbt_swap.clicked.connect(self.thrid_swap)
         self.ui.pbt_start.clicked.connect(self.start_game)
         self.map = [[self.EMPTY] * 15 for _ in range(15)]
         self.isRunning = False
         self.tag = ''
+        # 步骤列表，所有点放在这里面
+        self.steps = []
 
     def transfer_json(self):
         return json.dumps({'map': self.map, 'me': self.piece})
@@ -80,6 +81,9 @@ class Board(QWidget):
         self.painter.setBrush(QBrush(color))
         self.painter.drawEllipse(_x - 20, _y - 20, 40, 40)
         self.painter.end()
+        self.map[y][x] = col
+        self.tag = chr(x + ord('A')) + str(15 - y)
+        self.ui.tb_logs.append(str('黑棋' if col == self.BLACK else '白棋') + ': ' + self.tag)
 
     def eventFilter(self, obj, event) -> bool:
         if obj == self.ui.map and event.type() == QEvent.Paint:
@@ -91,11 +95,22 @@ class Board(QWidget):
                 self.draw_point(11, 11)
                 self.draw_point(7, 7)
                 self.paintState = self.GAME
+            elif self.paintState == self.FIRST:
+                self.first_game()
+                self.paintState = self.GAME
             elif self.paintState == self.GAME:
-                self.draw_piece(self.piecePos, self.piece)
+                while len(self.steps) != 0:
+                    pos = self.steps.pop()
+                    self.draw_piece(pos['step'], pos['me'])
             painter = QPainter(self.ui.map)
             painter.drawPixmap(0, 0, self.pix)
         return QObject.eventFilter(self, obj, event)
+
+    def first_game(self):
+        '''先手下'''
+        self.draw_piece((7, 7), self.BLACK)
+        self.draw_piece((7, 8), self.WHITE)
+        self.draw_piece((8, 7), self.BLACK)
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
@@ -116,16 +131,32 @@ class Board(QWidget):
                 if self.map[y][x] == self.EMPTY:
                     self.map[y][x] = self.piece
                     self.piecePos = [x, y]
-                    self.tag = chr(x + ord('A')) + str(15 - y)
-                    self.ui.tb_logs.append(str('黑棋' if self.piece == self.BLACK else '白棋') + ': ' + self.tag)
-                    self.sendmapSignal.emit(self.transfer_json())
+                    self.steps.append({'step': self.piecePos, 'me': -self.piece})
                     self.update()
+                    self.sendmapSignal.emit({
+                        'map': self.map,
+                        'me': self.piece
+                    })
 
     def choose_piece(self, piece):
         self.piece = piece
 
     def start_game(self):
-        ...
+        self.isfirst = self.ui.checkBox.isChecked()
+        if self.isfirst is True:
+            self.paintState = self.FIRST
+            self.update()
+
+    def get_result(self, res: dict):
+        self.steps.append(res)
+        self.update()
+
+    def thrid_swap(self):
+        self.piece = -self.piece
+        if self.ui.rbt_white.isChecked():
+            self.ui.rbt_black.setChecked(True)
+        else:
+            self.ui.rbt_white.setChecked(True)
 
 
 if __name__ == '__main__':
