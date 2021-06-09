@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
-
-from PyQt5 import QtCore
 from PyQt5.QtWidgets import QWidget, QApplication
 from PyQt5.QtGui import QPainter, QPen, QColor, QBrush, QPixmap, QFont
 from PyQt5.QtCore import Qt, QEvent, QObject, QPoint, pyqtSignal
 from Ui_board import Ui_Form
-from pprint import pprint
 import sys
 import json
 
@@ -16,7 +13,7 @@ class Board(QWidget):
     # 棋子编号
     BLACK, WHITE, EMPTY = 1, -1, 0
     # paintState状态
-    START, GAME = 'START', 'GAME'
+    START, GAME, FIRST = 'START', 'GAME', 'FIRST'
     # 发送给算法端
     sendmapSignal = pyqtSignal(str)
 
@@ -80,6 +77,9 @@ class Board(QWidget):
         self.painter.setBrush(QBrush(color))
         self.painter.drawEllipse(_x - 20, _y - 20, 40, 40)
         self.painter.end()
+        self.map[y][x] = col
+        self.tag = chr(x + ord('A')) + str(15 - y)
+        self.ui.tb_logs.append(str('黑棋' if col == self.BLACK else '白棋') + ': ' + self.tag)
 
     def eventFilter(self, obj, event) -> bool:
         if obj == self.ui.map and event.type() == QEvent.Paint:
@@ -91,11 +91,20 @@ class Board(QWidget):
                 self.draw_point(11, 11)
                 self.draw_point(7, 7)
                 self.paintState = self.GAME
+            elif self.paintState == self.FIRST:
+                self.first_game()
+                self.paintState = self.GAME
             elif self.paintState == self.GAME:
                 self.draw_piece(self.piecePos, self.piece)
             painter = QPainter(self.ui.map)
             painter.drawPixmap(0, 0, self.pix)
         return QObject.eventFilter(self, obj, event)
+
+    def first_game(self):
+        '''先手下'''
+        self.draw_piece((7, 7), self.BLACK)
+        self.draw_piece((7, 8), self.WHITE)
+        self.draw_piece((8, 7), self.BLACK)
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
@@ -116,8 +125,6 @@ class Board(QWidget):
                 if self.map[y][x] == self.EMPTY:
                     self.map[y][x] = self.piece
                     self.piecePos = [x, y]
-                    self.tag = chr(x + ord('A')) + str(15 - y)
-                    self.ui.tb_logs.append(str('黑棋' if self.piece == self.BLACK else '白棋') + ': ' + self.tag)
                     self.sendmapSignal.emit(self.transfer_json())
                     self.update()
 
@@ -125,7 +132,10 @@ class Board(QWidget):
         self.piece = piece
 
     def start_game(self):
-        ...
+        self.isfirst = self.ui.checkBox.isChecked()
+        if self.isfirst is True:
+            self.paintState = self.FIRST
+            self.update()
 
 
 if __name__ == '__main__':

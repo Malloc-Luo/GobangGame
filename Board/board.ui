@@ -55,6 +55,9 @@
        <height>960</height>
       </size>
      </property>
+     <property name="cursor">
+      <cursorShape>CrossCursor</cursorShape>
+     </property>
      <property name="styleSheet">
       <string notr="true">QWidget {
 	background: rgb(255, 255, 191);
@@ -184,6 +187,31 @@
           </property>
           <property name="text">
            <string>开始游戏</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QPushButton" name="pbt_swap">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <family>Microsoft YaHei UI</family>
+            <pointsize>10</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>三手交换</string>
           </property>
          </widget>
         </item>

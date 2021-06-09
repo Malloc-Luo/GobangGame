@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'd:\FileBox\Game\board.ui'
+# Form implementation generated from reading ui file 'd:\FileBox\Gobang\GobangGame\Board\board.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.2
 #
@@ -28,6 +28,7 @@ class Ui_Form(object):
         sizePolicy.setHeightForWidth(self.map.sizePolicy().hasHeightForWidth())
         self.map.setSizePolicy(sizePolicy)
         self.map.setMinimumSize(QtCore.QSize(960, 960))
+        self.map.setCursor(QtGui.QCursor(QtCore.Qt.CrossCursor))
         self.map.setStyleSheet("QWidget {\n"
 "    background: rgb(255, 255, 191);\n"
 "}")
@@ -113,6 +114,23 @@ class Ui_Form(object):
         self.pbt_start.setObjectName("pbt_start")
         self.horizontalLayout_4.addWidget(self.pbt_start)
         self.verticalLayout_2.addLayout(self.horizontalLayout_4)
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.pbt_swap = QtWidgets.QPushButton(self.widget_2)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.pbt_swap.sizePolicy().hasHeightForWidth())
+        self.pbt_swap.setSizePolicy(sizePolicy)
+        font = QtGui.QFont()
+        font.setFamily("Microsoft YaHei UI")
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setWeight(75)
+        self.pbt_swap.setFont(font)
+        self.pbt_swap.setObjectName("pbt_swap")
+        self.horizontalLayout_3.addWidget(self.pbt_swap)
+        self.verticalLayout_2.addLayout(self.horizontalLayout_3)
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.verticalLayout_2.addItem(spacerItem)
         self.verticalLayout_3 = QtWidgets.QVBoxLayout()
@@ -142,3 +160,4 @@ class Ui_Form(object):
         self.rbt_white.setText(_translate("Form", "白棋"))
         self.checkBox.setText(_translate("Form", "先手"))
         self.pbt_start.setText(_translate("Form", "开始游戏"))
+        self.pbt_swap.setText(_translate("Form", "三手交换"))
