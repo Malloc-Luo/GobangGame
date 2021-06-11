@@ -101,7 +101,7 @@ class Board(QWidget):
                 self.paintState = self.GAME
             elif self.paintState == self.GAME:
                 while len(self.steps) != 0:
-                    pos = self.steps.pop()
+                    pos = self.steps.pop(0)
                     self.draw_piece(pos['step'], pos['me'])
             painter = QPainter(self.ui.map)
             painter.drawPixmap(0, 0, self.pix)
