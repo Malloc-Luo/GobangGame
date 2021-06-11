@@ -110,8 +110,8 @@ class Board(QWidget):
     def first_game(self):
         '''先手下'''
         self.draw_piece((7, 7), self.BLACK)
-        self.draw_piece((7, 8), self.WHITE)
-        self.draw_piece((8, 7), self.BLACK)
+        #self.draw_piece((7, 8), self.WHITE)
+        #self.draw_piece((8, 7), self.BLACK)
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
