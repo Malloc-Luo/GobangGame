@@ -2,6 +2,7 @@
 from PyQt5.QtCore import QObject, pyqtSignal
 import numpy as np
 import sys
+from threading import Thread
 
 
 class AI(QObject):
@@ -50,8 +51,8 @@ class AI(QObject):
             newlist.append(test_pt)
         return newlist
 
-          
-            
+
+
     def ifWin(self,Map):
         myChessMap = [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -75,7 +76,7 @@ class AI(QObject):
                 myChessMap[i][j] = Map[i][j]
 
 
-                
+
         for i in range(0,15):
             myChessMap[i].extend([5, 5, 5, 5, 5])
             myChessMap[i] = [5, 5, 5, 5, 5] + myChessMap[i]
@@ -84,7 +85,7 @@ class AI(QObject):
             myChessMap.append([5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5])
             myChessMap.insert(0,[5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5])
 
-            
+
         for i in range(5,20):
             for j in range(5,20):
                 if(myChessMap[j][i] != 0):
@@ -95,12 +96,12 @@ class AI(QObject):
                     elif(myChessMap[j + 1][i + 1] == myChessMap[j][i] and myChessMap[j][i] == myChessMap[j + 2][i + 2] and myChessMap[j][i] == myChessMap[j + 3][i + 3] and myChessMap[j + 4][i + 4] == myChessMap[j][i]):
                         return myChessMap[j][i]
                     elif(myChessMap[j + 1][i - 1] == myChessMap[j][i] and myChessMap[j][i] == myChessMap[j + 2][i - 2] and myChessMap[j][i] == myChessMap[j + 3][i - 3] and myChessMap[j + 4][i - 4] == myChessMap[j][i]):
-                        return myChessMap[j][i]                     
+                        return myChessMap[j][i]
         return 0
 
 
 
-    
+
     def Search(self,Map,color):
         myChessMap = [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -135,10 +136,10 @@ class AI(QObject):
                         xyMark[2] = a
                         print(a)
                     myChessMap[i][j] = 0
-                        
+
         return xyMark
- 
-            
+
+
     def evaluae(self,Map,color):
         myChessMap = [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -160,7 +161,7 @@ class AI(QObject):
         for i in range(0,15):
             for j in range(0,15):
                 myChessMap[i][j] = Map[i][j]
-                
+
         if(color == -1):
             for i in range(0,15):
                 for j in range(0,15):
@@ -190,8 +191,10 @@ class AI(QObject):
                             mark = mark + AI.shape_score[m][0]
                 chessBuffer.clear()
         return mark
-    
 
+    def get_map_param(self, info: dict):
+        self.t = Thread(target=AI.get_map, args=(self, info))
+        self.t.start()
 
     def get_map(self, info: dict):
         # 这个是棋盘，在这里面进行计算

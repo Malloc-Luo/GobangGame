@@ -12,7 +12,7 @@ class Main(QObject):
         self.board = Board()
         self.ai = AI()
         # 棋盘发送数据到ai
-        self.board.sendmapSignal.connect(self.ai.get_map)
+        self.board.sendmapSignal.connect(self.ai.get_map_param)
         self.ai.sendStepSignal.connect(self.board.get_result)
 
     def start(self):

@@ -41,6 +41,8 @@ class Board(QWidget):
         self.tag = ''
         # 步骤列表，所有点放在这里面
         self.steps = []
+        # Ai模块是否正在运行，如果是则不能落子
+        self.isAiRunning = False
 
     def transfer_json(self):
         return json.dumps({'map': self.map, 'me': self.piece})
@@ -114,7 +116,7 @@ class Board(QWidget):
         #self.draw_piece((8, 7), self.BLACK)
 
     def mousePressEvent(self, event):
-        if event.button() == Qt.LeftButton:
+        if event.button() == Qt.LeftButton and (self.isAiRunning is False):
             if (event.pos().x() <= self.xend + 10) and (event.pos().y() <= self.yend + 10):
                 x, y = event.pos().x() - self.xbegin, event.pos().y() - self.ybegin
                 if x % 60 <= 10 and int(x / 60) < 15:
@@ -138,6 +140,7 @@ class Board(QWidget):
                         'map': self.map,
                         'me': self.piece
                     })
+                    self.isAiRunning = True
 
     def choose_piece(self, piece):
         self.piece = piece
@@ -149,6 +152,7 @@ class Board(QWidget):
             self.update()
 
     def get_result(self, res: dict):
+        self.isAiRunning = False
         self.steps.append(res)
         self.update()
 
