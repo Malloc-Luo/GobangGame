@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from PyQt5.QtWidgets import QWidget, QApplication
 from PyQt5.QtGui import QPainter, QPen, QColor, QBrush, QPixmap, QFont
-from PyQt5.QtCore import Qt, QEvent, QObject, QPoint, pyqtSignal
-from Ui_board import Ui_Form
+from PyQt5.QtCore import Qt, QEvent, QObject, QPoint, pyqtSignal, QTimer
+from resource.Ui_board import Ui_Form
 import sys
 import json
 from time import sleep, time
@@ -23,6 +23,7 @@ class Board(QWidget):
         self.ui = Ui_Form()
         self.ui.setupUi(self)
         self.setWindowTitle('五子棋')
+        self.ui.lcd_timer.display('00:00:00')
         self.set_pen()
         self.ui.map.installEventFilter(self)
         self.piece = self.BLACK
@@ -43,6 +44,12 @@ class Board(QWidget):
         self.steps = []
         # Ai模块是否正在运行，如果是则不能落子
         self.isAiRunning = False
+        # 定时器，刷新计时
+        self.timer = QTimer(self)
+        self.timeCnt = 0
+        self.timer.timeout.connect(self.refresh_lcd_display)
+        self.timer.start(10)
+        self.timer.stop()
 
     def transfer_json(self):
         return json.dumps({'map': self.map, 'me': self.piece})
@@ -112,8 +119,8 @@ class Board(QWidget):
     def first_game(self):
         '''先手下'''
         self.draw_piece((7, 7), self.BLACK)
-        #self.draw_piece((7, 8), self.WHITE)
-        #self.draw_piece((8, 7), self.BLACK)
+        # self.draw_piece((7, 8), self.WHITE)
+        # self.draw_piece((8, 7), self.BLACK)
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton and (self.isAiRunning is False):
@@ -141,18 +148,19 @@ class Board(QWidget):
                         'me': self.piece
                     })
                     self.isAiRunning = True
+                    self.timer.start()
 
     def choose_piece(self, piece):
         self.piece = piece
 
     def start_game(self):
-        self.isfirst = self.ui.checkBox.isChecked()
-        if self.isfirst is True:
-            self.paintState = self.FIRST
-            self.update()
+        self.paintState = self.FIRST
+        self.update()
+        self.ui.pbt_start.setDisabled(True)
 
     def get_result(self, res: dict):
         self.isAiRunning = False
+        self.timer.stop()
         self.steps.append(res)
         self.update()
 
@@ -162,6 +170,8 @@ class Board(QWidget):
             self.ui.rbt_black.setChecked(True)
         else:
             self.ui.rbt_white.setChecked(True)
+        self.ui.tb_logs.append('三手交换')
+        self.ui.pbt_swap.setDisabled(True)
 
     def save_map(self):
         with open(str(int(time())) + '.json', 'w', encoding='utf-8') as f:
@@ -169,6 +179,12 @@ class Board(QWidget):
                 'map': self.map,
                 'me': self.piece
             }, f, indent=4)
+
+    def refresh_lcd_display(self):
+        self.timeCnt += 1
+        minute, sec, msec = int(self.timeCnt / 6000), int(self.timeCnt / 100) % 60, self.timeCnt % 100
+        self.ui.lcd_timer.display('%02d:%02d:%02d' % (minute, sec, msec))
+        self.timer.start()
 
 
 if __name__ == '__main__':

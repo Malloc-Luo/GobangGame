@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'd:\FileBox\Gobang\GobangGame\Board\board.ui'
+# Form implementation generated from reading ui file 'd:\FileBox\Gobang\GobangGame\Board\resource\board.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.2
 #
@@ -51,6 +51,21 @@ class Ui_Form(object):
         self.verticalLayout_2.setContentsMargins(2, 30, 2, -1)
         self.verticalLayout_2.setSpacing(25)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.lcd_timer = QtWidgets.QLCDNumber(self.widget_2)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.lcd_timer.sizePolicy().hasHeightForWidth())
+        self.lcd_timer.setSizePolicy(sizePolicy)
+        self.lcd_timer.setMinimumSize(QtCore.QSize(0, 40))
+        self.lcd_timer.setStyleSheet("QLCDNumber {\n"
+"    border: none;\n"
+"}")
+        self.lcd_timer.setFrameShape(QtWidgets.QFrame.Box)
+        self.lcd_timer.setDigitCount(8)
+        self.lcd_timer.setSegmentStyle(QtWidgets.QLCDNumber.Flat)
+        self.lcd_timer.setObjectName("lcd_timer")
+        self.verticalLayout_2.addWidget(self.lcd_timer)
         self.label = QtWidgets.QLabel(self.widget_2)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -79,6 +94,7 @@ class Ui_Form(object):
         font.setBold(True)
         font.setWeight(75)
         self.rbt_black.setFont(font)
+        self.rbt_black.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.rbt_black.setChecked(True)
         self.rbt_black.setObjectName("rbt_black")
         self.horizontalLayout_2.addWidget(self.rbt_black)
@@ -94,26 +110,10 @@ class Ui_Form(object):
         font.setBold(True)
         font.setWeight(75)
         self.rbt_white.setFont(font)
+        self.rbt_white.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.rbt_white.setObjectName("rbt_white")
         self.horizontalLayout_2.addWidget(self.rbt_white)
         self.verticalLayout_2.addLayout(self.horizontalLayout_2)
-        self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_5.setObjectName("horizontalLayout_5")
-        self.checkBox = QtWidgets.QCheckBox(self.widget_2)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.checkBox.sizePolicy().hasHeightForWidth())
-        self.checkBox.setSizePolicy(sizePolicy)
-        font = QtGui.QFont()
-        font.setFamily("Microsoft YaHei UI")
-        font.setPointSize(10)
-        font.setBold(True)
-        font.setWeight(75)
-        self.checkBox.setFont(font)
-        self.checkBox.setObjectName("checkBox")
-        self.horizontalLayout_5.addWidget(self.checkBox)
-        self.verticalLayout_2.addLayout(self.horizontalLayout_5)
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.pbt_start = QtWidgets.QPushButton(self.widget_2)
@@ -128,6 +128,7 @@ class Ui_Form(object):
         font.setBold(True)
         font.setWeight(75)
         self.pbt_start.setFont(font)
+        self.pbt_start.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.pbt_start.setStyleSheet("QPushButton {\n"
 "    border-style:none;\n"
 "    padding:10px;\n"
@@ -165,6 +166,7 @@ class Ui_Form(object):
         font.setBold(True)
         font.setWeight(75)
         self.pbt_swap.setFont(font)
+        self.pbt_swap.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.pbt_swap.setStyleSheet("QPushButton {\n"
 "    border-style:none;\n"
 "    padding:10px;\n"
@@ -202,6 +204,7 @@ class Ui_Form(object):
         font.setBold(True)
         font.setWeight(75)
         self.pbt_save.setFont(font)
+        self.pbt_save.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.pbt_save.setStyleSheet("QPushButton {\n"
 "    border-style:none;\n"
 "    padding:10px;\n"
@@ -225,7 +228,7 @@ class Ui_Form(object):
         self.pbt_save.setObjectName("pbt_save")
         self.horizontalLayout_6.addWidget(self.pbt_save)
         self.verticalLayout_2.addLayout(self.horizontalLayout_6)
-        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
+        spacerItem = QtWidgets.QSpacerItem(20, 80, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.verticalLayout_2.addItem(spacerItem)
         self.verticalLayout_3 = QtWidgets.QVBoxLayout()
         self.verticalLayout_3.setObjectName("verticalLayout_3")
@@ -251,10 +254,16 @@ class Ui_Form(object):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
         self.label.setText(_translate("Form", "本机AI 棋子:"))
+        self.rbt_black.setToolTip(_translate("Form", "AI为黑棋"))
         self.rbt_black.setText(_translate("Form", "黑棋"))
+        self.rbt_white.setToolTip(_translate("Form", "AI为白棋"))
         self.rbt_white.setText(_translate("Form", "白棋"))
-        self.checkBox.setText(_translate("Form", "先手"))
-        self.pbt_start.setText(_translate("Form", "开始游戏"))
+        self.pbt_start.setToolTip(_translate("Form", "开始游戏"))
+        self.pbt_start.setText(_translate("Form", "先手开局"))
+        self.pbt_swap.setToolTip(_translate("Form", "三手交换"))
         self.pbt_swap.setText(_translate("Form", "三手交换"))
+        self.pbt_save.setToolTip(_translate("Form", "保存当前棋盘"))
         self.pbt_save.setText(_translate("Form", "保存棋盘"))
-from img import icon_rc
+
+
+import resource.icon_rc
