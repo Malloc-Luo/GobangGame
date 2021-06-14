@@ -30,7 +30,7 @@ class Board(QWidget):
         self.piecePos = None
         self.paintState = self.START
         # 绘图缓冲区
-        self.pix = QPixmap(1200, 1000)
+        self.pix = QPixmap(930, 930)
         self.pix.fill(QColor(255, 255, 191))
         self.ui.rbt_black.toggled.connect(lambda: self.choose_piece(self.BLACK))
         self.ui.rbt_white.toggled.connect(lambda: self.choose_piece(self.WHITE))

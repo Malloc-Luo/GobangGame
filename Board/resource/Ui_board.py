@@ -14,9 +14,14 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(1200, 950)
-        Form.setMinimumSize(QtCore.QSize(1200, 950))
-        Form.setMaximumSize(QtCore.QSize(1200, 950))
+        Form.resize(1200, 947)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(Form.sizePolicy().hasHeightForWidth())
+        Form.setSizePolicy(sizePolicy)
+        Form.setMinimumSize(QtCore.QSize(1200, 947))
+        Form.setMaximumSize(QtCore.QSize(1200, 947))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/main/map.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Form.setWindowIcon(icon)
@@ -30,10 +35,11 @@ class Ui_Form(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.map.sizePolicy().hasHeightForWidth())
         self.map.setSizePolicy(sizePolicy)
-        self.map.setMinimumSize(QtCore.QSize(960, 960))
+        self.map.setMinimumSize(QtCore.QSize(955, 947))
         self.map.setCursor(QtGui.QCursor(QtCore.Qt.CrossCursor))
         self.map.setStyleSheet("QWidget {\n"
 "    background: rgb(255, 255, 191);\n"
+"    border: 3px solid rgb(172, 172, 172);\n"
 "}")
         self.map.setObjectName("map")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.map)
@@ -48,7 +54,7 @@ class Ui_Form(object):
         self.widget_2.setMinimumSize(QtCore.QSize(220, 0))
         self.widget_2.setObjectName("widget_2")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.widget_2)
-        self.verticalLayout_2.setContentsMargins(2, 30, 2, -1)
+        self.verticalLayout_2.setContentsMargins(2, 30, 2, 5)
         self.verticalLayout_2.setSpacing(25)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.lcd_timer = QtWidgets.QLCDNumber(self.widget_2)
@@ -231,6 +237,7 @@ class Ui_Form(object):
         spacerItem = QtWidgets.QSpacerItem(20, 80, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.verticalLayout_2.addItem(spacerItem)
         self.verticalLayout_3 = QtWidgets.QVBoxLayout()
+        self.verticalLayout_3.setContentsMargins(-1, -1, 5, -1)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.tb_logs = QtWidgets.QTextBrowser(self.widget_2)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
@@ -242,6 +249,9 @@ class Ui_Form(object):
         font = QtGui.QFont()
         font.setFamily("Microsoft YaHei UI")
         self.tb_logs.setFont(font)
+        self.tb_logs.setStyleSheet("QTextBrowser {\n"
+"    border: 3px solid rgb(172, 172, 172);\n"
+"}")
         self.tb_logs.setObjectName("tb_logs")
         self.verticalLayout_3.addWidget(self.tb_logs)
         self.verticalLayout_2.addLayout(self.verticalLayout_3)
