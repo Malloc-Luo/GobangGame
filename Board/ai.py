@@ -262,9 +262,10 @@ class AI(QObject):
         AI.ret_result(self,next_pos)
         ##############################
 
-    def ret_result(self, pos: tuple):
+    def ret_result(self, pos: tuple, winner=None):
         # 发送结果，在运行完后调用这个函数发送坐标
         self.sendStepSignal.emit({
             'step': pos,
-            'me': self.me
+            'me': self.me,
+            'winner': winner
         })

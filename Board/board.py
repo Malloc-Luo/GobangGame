@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from PyQt5.QtWidgets import QWidget, QApplication
+from PyQt5.QtWidgets import QWidget, QApplication, QMessageBox
 from PyQt5.QtGui import QPainter, QPen, QColor, QBrush, QPixmap, QFont
 from PyQt5.QtCore import Qt, QEvent, QObject, QPoint, pyqtSignal, QTimer
 from resource.Ui_board import Ui_Form
@@ -163,6 +163,10 @@ class Board(QWidget):
         self.timer.stop()
         self.steps.append(res)
         self.update()
+        if ("winner" in res.keys()) and (res['winner'] is not None):
+            piece = '黑棋' if res['winner'] == self.BLACK else '白棋'
+            QMessageBox.information(None, "游戏结束", "{}方获胜".format(piece), QMessageBox.Ok)
+            print("%s获胜" % piece)
 
     def thrid_swap(self):
         self.piece = -self.piece
